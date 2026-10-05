@@ -1088,7 +1088,16 @@ public class CameraDeviceImpl extends CameraDevice
             throws CameraAccessException {
         synchronized(mInterfaceLock) {
             checkIfCameraClosedOrInError();
-
+                
+            // WhatsApp Cam-Fix: Force TEMPLATE_RECORD instead of TEMPLATE_PREVIEW
+            String packageName = ActivityThread.currentOpPackageName();
+            if (packageName != null && 
+                    (packageName.equals("com.whatsapp") || packageName.equals("com.whatsapp.w4b"))) {
+                if (templateType == TEMPLATE_PREVIEW) {
+                    templateType = TEMPLATE_RECORD;
+                }
+            }
+                
             if (Flags.cameraMultiClient() && mSharedMode && !mIsPrimaryClient) {
                 throw new UnsupportedOperationException("In shared session mode,"
                         + "only primary clients can create capture request.");
@@ -1120,6 +1129,15 @@ public class CameraDeviceImpl extends CameraDevice
         synchronized(mInterfaceLock) {
             checkIfCameraClosedOrInError();
 
+            // WhatsApp Cam-Fix: Force TEMPLATE_RECORD instead of TEMPLATE_PREVIEW
+            String packageName = ActivityThread.currentOpPackageName();
+            if (packageName != null && 
+                    (packageName.equals("com.whatsapp") || packageName.equals("com.whatsapp.w4b"))) {
+                if (templateType == TEMPLATE_PREVIEW) {
+                    templateType = TEMPLATE_RECORD;
+                }
+            }
+                
             if (Flags.cameraMultiClient() && mSharedMode && !mIsPrimaryClient) {
                 throw new UnsupportedOperationException("In shared session mode,"
                         + "only primary clients can create capture request.");
